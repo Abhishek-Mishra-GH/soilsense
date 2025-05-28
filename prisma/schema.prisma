@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String         @id @default(cuid())
+  firstName      String
+  lastName       String
+  email          String         @unique
+  farmLocation   String
+  farmSize       String
+  hashedPassword String
+  salt           String
+  createdAt      DateTime       @default(now())
+  SoilAnalysis   SoilAnalysis[]
+}
+
+model SoilAnalysis {
+  id               String   @id @default(cuid())
+  userId           String
+  imageUrl         String
+  soilType         String
+  soilDescription  String
+  healthScore      Int
+  healthStatus     String
+  phLevel          Float
+  phStatus         String
+  recommendedCrops String[]
+  recommendations  String[]
+  nitrogen         Float
+  phosphorus       Float
+  potassium        Float
+  createdAt        DateTime @default(now())
+  latitude         Float?
+  longitude        Float?
+  address          String?
+  moisture         Float    @default(0)
+  temperature      Float    @default(0)
+  user             User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
