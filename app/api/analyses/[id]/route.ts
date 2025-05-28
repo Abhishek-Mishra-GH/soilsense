@@ -1,10 +1,10 @@
 import { getUserSession } from "@/auth/session";
 import { getSoilAnalysis } from "@/lib/soil-analysis";
-import { NextResponse, NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
     const user = await getUserSession();
@@ -12,7 +12,7 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const analysis = await getSoilAnalysis(context.params.id);
+    const analysis = await getSoilAnalysis(params.id);
 
     if (!analysis) {
       return NextResponse.json(
